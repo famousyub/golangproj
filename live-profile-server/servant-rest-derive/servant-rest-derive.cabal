@@ -1,0 +1,62 @@
+name:                servant-rest-derive
+version:             0.1.0.0
+synopsis:            Semi automatic utilities to derive RESTful APIs for servant
+description:         Please see README.md
+homepage:            https://github.com/NCrashed/servant-rest-derive#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Anton Gushcha
+maintainer:          ncrashed@gmail.com
+copyright:           (c) 2016 Anton Gushcha
+category:            Web
+build-type:          Simple
+extra-source-files:
+  README.md 
+  CHANGELOG.md
+cabal-version:       >=1.10
+
+library
+  hs-source-dirs:      src
+  exposed-modules:
+    Servant.API.REST.Derive
+    Servant.API.REST.Derive.Named
+    Servant.API.REST.Derive.Patch
+    Servant.API.REST.Derive.TH
+    Servant.API.REST.Derive.Vinyl
+  build-depends:       
+      base >= 4.7 && < 5
+    , aeson                     >= 0.11     && < 1.1
+    , aeson-injector            >= 1.0.4    && < 1.1
+    , hashable                  >= 1.2      && < 1.3
+    , insert-ordered-containers >= 0.1      && < 0.2
+    , lens                      >= 4.13     && < 4.15
+    , path-pieces               >= 0.2      && < 0.3
+    , servant                   >= 0.7      && < 0.8
+    , servant-auth-token-api    >= 0.2      && < 0.3
+    , swagger2                  >= 2.1      && < 2.2
+    , template-haskell          >= 2.11     && < 2.12
+    , text                      >= 1.2      && < 1.3
+    , unordered-containers      >= 0.2      && < 0.3
+    , vinyl                     >= 0.5.2    && < 0.6
+
+  default-language:    Haskell2010
+  default-extensions:
+    DataKinds
+    DeriveGeneric
+    FlexibleContexts
+    FlexibleInstances
+    GeneralizedNewtypeDeriving
+    KindSignatures
+    MultiParamTypeClasses
+    OverloadedStrings
+    RankNTypes
+    ScopedTypeVariables
+    TemplateHaskell
+    TypeFamilies
+    TypeOperators
+    TypeSynonymInstances
+    UndecidableInstances
+
+source-repository head
+  type:     git
+  location: https://github.com/NCrashed/servant-rest-derive

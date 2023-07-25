@@ -1,0 +1,72 @@
+stages:
+  - prebuild
+  - build
+  - predeploy
+  - deploy
+
+cache:
+  paths:
+  - .stack-work
+  - live-profile-server-api/.stack-work
+  - live-profile-server-backend/.stack-work
+  - live-profile-server-frontend/.stack-work
+
+image-stop:
+  stage: predeploy
+  script:
+    - sudo docker rm -f live-profile-postgres || true
+    - sudo docker rm -f live-profile-server || true
+  only:
+    - master
+
+image-build:
+  stage: build
+  script:
+    # rm cache 
+    #- stack clean 
+    - stack --version 
+
+    # workournd a centos SSL bug 
+    - export NSS_DISABLE_HW_AES=1 
+    - export PATH=/home/gitlab-runner/.local/bin:$PATH
+    - stack setup
+    - stack install happy alex 
+
+    # build server
+    - stack install
+    - cp /home/gitlab-runner/.local/bin/live-profile-server ./live-profile-server-backend/live-profile-server
+
+    # build client
+    - cd ./live-profile-server-frontend
+    - export PATH=$PATH:/home/gitlab-runner/.stack/programs/x86_64-linux/ghc-gmp4-7.10.3/bin
+    - stack setup
+    - stack install 
+    - cp .stack-work/install/x86_64-linux-gmp4/lts-6.6/ghcjs-0.2.0.900006006_ghc-7.10.3/bin/fitclubs-frontend-output.jsexe/*.js ../live-profile-server-backend/static/
+    
+    # build container
+    - cd ..
+    - sudo docker build -t live-profile-server ./
+  only:
+    - master
+
+image-deploy:
+  stage: deploy
+  script:
+    - sudo docker run --name live-profile-postgres
+      -v /home/live-profile-server/data:/var/lib/postgresql/data
+      -e POSTGRES_PASSWORD=ZooW4eigh8AePoh2ahwa
+      --restart=always -d
+      postgres:9.5
+
+    - sudo docker run -p 8302:3000
+      --link live-profile-postgres:postgres
+      -v /home/live-profile-server/import:/opt/server/import
+      -e POSTGRES_USER=postgres 
+      -e POSTGRES_DATABASE=postgres
+      -e POSTGRES_PASSWORD=ZooW4eigh8AePoh2ahwa
+      --restart=always -d
+      --name=live-profile-server live-profile-server
+      ./live-profile-server
+  only:
+    - master
+

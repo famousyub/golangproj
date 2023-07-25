@@ -1,0 +1,1 @@
+hs-live-profile --RTS --command="live-profile-test-app +RTS -lm -N1" --chunk="100"
