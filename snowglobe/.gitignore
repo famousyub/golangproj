@@ -1,9 +1,0 @@
-*.out
-*.tsv
-
-data
-dist
-vendor
-
-.cabal-sandbox
-cabal.sandbox.config

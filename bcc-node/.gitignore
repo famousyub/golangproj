@@ -1,6 +1,0 @@
-*.vscode
-/dist-newstyle
-/example
-cabal.project.local
-haddocks
-/logs
